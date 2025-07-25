@@ -1,19 +1,35 @@
 let editor;
 
-// === Node HTML generátor energynode-okhoz ===
-function createEnergyNodeHTML(name, status = "on") {
-    const isOff = status === "off";
-    const buttonText = isOff ? "Off" : "On";
-    const buttonClass = isOff ? "btn-danger" : "btn-success";
-    return `
-        <div class="energynode" data-status="${status}">
-          <div class="title-box fw-bold">
-            ${name}
-            <button class="btn ${buttonClass} btn-sm toggle-btn" onclick="toggleNode(this)">${buttonText}</button>
-          </div>
-          <div class="box">sample text</div>
-        </div>
-    `;
+// === Általános Node HTML-generátor ===
+function createNodeHTML(name, type, status = "on") {
+    if (type === "energynode") {
+        const isOff = status === "off";
+        const buttonText = isOff ? "Off" : "On";
+        const buttonClass = isOff ? "btn-danger" : "btn-success";
+        return `
+            <div class="energynode" data-status="${status}">
+              <div class="title-box fw-bold">
+                ${name}
+                <button class="btn ${buttonClass} btn-sm toggle-btn" onclick="toggleNode(this)">${buttonText}</button>
+              </div>
+              <div class="box">sample text</div>
+            </div>
+        `;
+    }
+
+    if (type === "inputnode" || type === "outputnode") {
+        const isInput = type === "inputnode";
+        return `
+            <div class="${type}">
+                <div class="title-box text-bg-secondary lead">${name}</div>
+                <div class="box">
+                    ${isInput ? "Exogenous input" : "Electricity demand is exogenous input"}
+                </div>
+            </div>
+        `;
+    }
+
+    return `<div class="box">${name}</div>`; // Fallback
 }
 
 // === Node státuszváltás (Ki/Bekapcsolás) ===
@@ -99,8 +115,8 @@ function addEnergyNodePrompt() {
     if (name) {
         const posX = Math.floor(Math.random() * 600 + 50);
         const posY = Math.floor(Math.random() * 300 + 50);
-        const nodeHTML = createEnergyNodeHTML(name);
-        editor.addNode("energynode", 1, 1, posX, posY, "energynode", { name, status: "on" }, nodeHTML);
+        const html = createNodeHTML(name, "energynode", "on");
+        editor.addNode("energynode", 1, 1, posX, posY, "energynode", { name, status: "on" }, html);
     }
 }
 
@@ -108,49 +124,32 @@ function addEnergyNodePrompt() {
 function addDefaultNodesWithConnections() {
     const nodeIds = {};
 
-    const createInput = (name, x, y) => {
-        const html = `
-            <div class="inputnode">
-                <div class="title-box lead">${name}</div>
-                <div class="box">Exogenous input</div>
-            </div>
-        `;
-        nodeIds[name] = editor.addNode("inputnode", 0, 1, x, y, "inputnode", { name }, html);
+    const add = (name, type, x, y, status = "on") => {
+        const html = createNodeHTML(name, type, status);
+        const inputs = type === "inputnode" ? 0 : 1;
+        const outputs = type === "outputnode" ? 0 : 1;
+        const data = { name, ...(type === "energynode" && { status }) };
+        nodeIds[name] = editor.addNode(type, inputs, outputs, x, y, type, data, html);
     };
 
-    const createOutput = (name, x, y) => {
-        const html = `
-            <div class="outputnode">
-                <div class="title-box lead">${name}</div>
-                <div class="box">Electricity demand is exogenous input</div>
-            </div>
-        `;
-        nodeIds[name] = editor.addNode("outputnode", 1, 0, x, y, "outputnode", { name }, html);
-    };
+    // Inputok
+    add("Sunlight", "inputnode", 10, 20);
+    add("Grid", "inputnode", 10, 170);
+    add("Biogas", "inputnode", 10, 320);
+    add("Sewage demand", "inputnode", 10, 470);
 
-    const createEnergy = (name, x, y, status = "on") => {
-        const html = createEnergyNodeHTML(name, status);
-        nodeIds[name] = editor.addNode("energynode", 1, 1, x, y, "energynode", { name, status }, html);
-    };
-
-    // Input-ok
-    createInput("Sunlight", 10, 20);
-    createInput("Grid", 10, 170);
-    createInput("Biogas", 10, 320);
-    createInput("Sewage demand", 10, 470);
-
-    // Energianode-ok
-    createEnergy("Solar Plant", 300, 20);
-    createEnergy("Battery", 600, 50);
-    createEnergy("Electrolyzer", 600, 200);
-    createEnergy("H2 storage", 850, 170);
-    createEnergy("H2 Fuel station", 1130, 100);
-    createEnergy("H2+Biogas engine", 1130, 260);
-    createEnergy("Biogas storage", 850, 350);
-    createEnergy("Biogas engine", 1130, 420);
+    // Energynode-ok
+    add("Solar Plant", "energynode", 300, 20);
+    add("Battery", "energynode", 600, 50);
+    add("Electrolyzer", "energynode", 600, 200);
+    add("H2 storage", "energynode", 850, 170);
+    add("H2 Fuel station", "energynode", 1130, 100);
+    add("H2+Biogas engine", "energynode", 1130, 260);
+    add("Biogas storage", "energynode", 850, 350);
+    add("Biogas engine", "energynode", 1130, 420);
 
     // Output
-    createOutput("Sewage farm", 1400, 170);
+    add("Sewage farm", "outputnode", 1430, 20);
 
     // Kapcsolatok
     const connections = [

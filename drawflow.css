@@ -6,11 +6,6 @@ body {
     overflow: auto;
 }
 
-#toolbar {
-    padding: 10px;
-    background: #ddd;
-}
-
 #drawflow {
     height: 100vh;
     width: 100%;
@@ -35,4 +30,8 @@ body {
 
 .drawflow-node .box {
     padding: 15px 20px !important;
+}
+
+.drawflow-delete {
+    line-height: 25px !important;
 }
