@@ -179,8 +179,8 @@ function addDefaultNodesWithConnections() {
 
     // Energynode-ok
     add("Solar Plant", "energynode", 280, 20, "on", { "capacity": 1000, "photovoltaic_coefficient": 1 });
-    add("Battery", "energynode", 580, 20, "on", { "max_capacity": 600, "input_flow_rate": 300, "output_flow_rate": 300, "initial_charge": 0 });
-    add("Electrolyzer", "energynode", 580, 420, "on", { "capacity": 500, "H2_efficient": 0.0187, "grid_rule": 0 });
+    add("Battery", "energynode", 580, 50, "on", { "max_capacity": 600, "input_flow_rate": 300, "output_flow_rate": 300, "initial_charge": 0 });
+    add("Electrolyzer", "energynode", 580, 450, "on", { "capacity": 500, "H2_efficient": 0.0187, "grid_rule": 0 });
     add("H2 storage", "energynode", 870, 20, "on", { "max_capacity": 300, "input_flow_rate": 300, "output_flow_rate": 100, "initial_stock": 0 });
     add("H2 Fuel station", "energynode", 1160, 20, "on", { "max_storage_capacity": 45, "input_flow_rate": 5, "output_flow_rate": 45, "initial_stock": 0, "mobility_H2_use": 40 });
     add("H2+Biogas engine", "energynode", 1160, 490, "on", { "capacity": 250, "prod_coefficient_from_biogas": 1.71, "prod_coefficient_from_H2": 1.05, "maximum_H2_mixture_ratio": 0.2, "H2_kgToM3": 11.123 });
@@ -188,7 +188,7 @@ function addDefaultNodesWithConnections() {
     add("Biogas engine", "energynode", 1450, 350, "on", { "capacity": 500, "prod_coefficient": 1.71, "min_operating_capacity": 0.8 });
 
     // Output
-    add("Sewage farm", "outputnode", 1450, 20);
+    add("Sewage farm", "outputnode", 1750, 140);
 
     // Kapcsolatok
     const connections = [
