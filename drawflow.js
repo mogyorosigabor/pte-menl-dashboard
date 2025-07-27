@@ -14,7 +14,7 @@ function createNodeHTML(name, type, status = "on", params = {}) {
             return `
                 <div class="my-2">
                     <label for="${idName}" class="form-label mb-1">${inputName}</label>
-                    <input type="number" class="form-control form-control-sm param-input shadow-none"
+                    <input type="number" class="form-control form-control-sm param-input shadow-none w-100"
                         name="${idName}" id="${idName}" data-key="${key}" value="${val}" min="0" step="any">
                 </div>
             `;
