@@ -24,10 +24,10 @@ body {
     padding: 0 10px !important;
 }
 
-.drawflow-node .box {
-    padding: 15px 20px !important;
-}
-
 .drawflow-delete {
     line-height: 25px !important;
+}
+
+.drawflow .drawflow-node {
+    width: 220px !important;
 }
