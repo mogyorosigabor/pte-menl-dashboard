@@ -181,10 +181,10 @@ function addDefaultNodesWithConnections() {
     add("Solar Plant", "energynode", 280, 20, "on", { "capacity": 1000, "photovoltaic_coefficient": 1 });
     add("Battery", "energynode", 580, 50, "on", { "max_capacity": 600, "input_flow_rate": 300, "output_flow_rate": 300, "initial_charge": 0 });
     add("Electrolyzer", "energynode", 580, 450, "on", { "capacity": 500, "H2_efficient": 0.0187, "grid_rule": 0 });
-    add("H2 storage", "energynode", 870, 20, "on", { "max_capacity": 300, "input_flow_rate": 300, "output_flow_rate": 100, "initial_stock": 0 });
+    add("H2 storage", "energynode", 870, 70, "on", { "max_capacity": 300, "input_flow_rate": 300, "output_flow_rate": 100, "initial_stock": 0 });
+    add("Biogas storage", "energynode", 870, 470, "on", { "max_capacity": 2720, "input_flow_rate": 2720, "output_flow_rate": 2720, "initial_stock": 0 });
     add("H2 Fuel station", "energynode", 1160, 20, "on", { "max_storage_capacity": 45, "input_flow_rate": 5, "output_flow_rate": 45, "initial_stock": 0, "mobility_H2_use": 40 });
     add("H2+Biogas engine", "energynode", 1160, 490, "on", { "capacity": 250, "prod_coefficient_from_biogas": 1.71, "prod_coefficient_from_H2": 1.05, "maximum_H2_mixture_ratio": 0.2, "H2_kgToM3": 11.123 });
-    add("Biogas storage", "energynode", 870, 420, "on", { "max_capacity": 2720, "input_flow_rate": 2720, "output_flow_rate": 2720, "initial_stock": 0 });
     add("Biogas engine", "energynode", 1450, 350, "on", { "capacity": 500, "prod_coefficient": 1.71, "min_operating_capacity": 0.8 });
 
     // Output
@@ -192,10 +192,10 @@ function addDefaultNodesWithConnections() {
 
     // Kapcsolatok
     const connections = [
-        { from: 1, to: 5 }, { from: 2, to: 7 }, { from: 3, to: 11 }, { from: 4, to: 13 },
+        { from: 1, to: 5 }, { from: 2, to: 7 }, { from: 3, to: 9 }, { from: 4, to: 13 },
         { from: 5, to: 13 }, { from: 5, to: 6 }, { from: 5, to: 7 }, { from: 6, to: 13 },
-        { from: 7, to: 8 }, { from: 8, to: 9 }, { from: 8, to: 10 }, { from: 10, to: 13 },
-        { from: 11, to: 12 }, { from: 11, to: 10 }, { from: 12, to: 13 }
+        { from: 7, to: 8 }, { from: 8, to: 10 }, { from: 8, to: 11 }, { from: 9, to: 11 },
+        { from: 9, to: 12 }, { from: 11, to: 13 }, { from: 12, to: 13 }
     ];
     connections.forEach(({ from, to }) => editor.addConnection(from, to, 'output_1', 'input_1'));
 
