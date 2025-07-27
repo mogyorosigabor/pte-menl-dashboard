@@ -10,11 +10,12 @@ function createNodeHTML(name, type, status = "on", params = {}) {
         const buttonClass = isOff ? "btn-danger" : "btn-success";
         const paramInputs = Object.entries(params).map(([key, val]) => {
             const inputName = restoreKey(key);
+            const idName = convertKey(name + "_" + key);
             return `
                 <div class="my-2">
-                    <label for="${key}" class="form-label mb-1">${inputName}</label>
+                    <label for="${idName}" class="form-label mb-1">${inputName}</label>
                     <input type="number" class="form-control form-control-sm param-input shadow-none"
-                        name="${key}" id="${key}" data-key="${key}" value="${val}" min="0" step="any">
+                        name="${idName}" id="${idName}" data-key="${key}" value="${val}" min="0" step="any">
                 </div>
             `;
         }).join("");
@@ -22,8 +23,7 @@ function createNodeHTML(name, type, status = "on", params = {}) {
         return `
             <div class="energynode" data-status="${status}">
               <div class="title-box fw-bold">
-                ${name}
-                <button type="button" class="btn ${buttonClass} btn-sm" onclick="toggleNode(this)">${buttonText}</button>
+                ${name} <button type="button" class="btn ${buttonClass} btn-sm" onclick="toggleNode(this)">${buttonText}</button>
               </div>
               <div class="box">${paramInputs || "No parameters"}</div>
             </div>
@@ -35,9 +35,7 @@ function createNodeHTML(name, type, status = "on", params = {}) {
         return `
             <div class="${type}">
                 <div class="title-box text-bg-secondary lead">${name}</div>
-                <div class="box">
-                    ${isInput ? "Exogenous input" : "Electricity demand is exogenous input"}
-                </div>
+                <div class="box">${isInput ? "Exogenous input" : "Electricity demand is exogenous input"}</div>
             </div>
         `;
     }
@@ -63,19 +61,18 @@ window.toggleNode = function (btn) {
 function saveFlow() {
     const data = editor.export();
 
+    // Energynode-ok paraméterei-nek mentése
     for (const id in data.drawflow.Home.data) {
         const node = data.drawflow.Home.data[id];
         if (node.name === "energynode") {
             const el = document.querySelector(`#node-${id} .energynode`);
             const inputs = el?.querySelectorAll(".param-input");
             const params = {};
-
             inputs?.forEach(input => {
                 const key = input.dataset.key;
                 const value = parseFloat(input.value);
                 if (!isNaN(value)) params[key] = value;
             });
-
             node.data.params = params;
         }
     }
@@ -107,6 +104,7 @@ function loadFlow() {
             button.classList.remove(isOff ? "btn-success" : "btn-danger");
             button.innerText = isOff ? "Off" : "On";
 
+            // Energynode-ok paramétereinek betöltése
             const paramInputs = el.querySelectorAll(".param-input");
             paramInputs.forEach(input => {
                 const key = input.dataset.key;
