@@ -40,8 +40,8 @@ window.toggleNode = function (btn) {
     const nodeId = parseInt(parentNode.getAttribute("id").replace("node-", ""));
     const newStatus = isOn ? "off" : "on";
     node.dataset.status = newStatus;
-    btn.classList.toggle("btn-success");
-    btn.classList.toggle("btn-danger");
+    btn.classList.add(isOn ? "btn-danger" : "btn-success");
+    btn.classList.remove(isOn ? "btn-success" : "btn-danger");
     btn.innerText = isOn ? "Off" : "On";
     editor.updateNodeDataFromId(nodeId, { ...editor.getNodeFromId(nodeId).data, status: newStatus });
 };
@@ -72,6 +72,8 @@ function loadFlow() {
             const isOff = nodeData.data.status === "off";
             el.classList.toggle("off", isOff);
             el.dataset.status = isOff ? "off" : "on";
+            button.classList.add(isOff ? "btn-danger" : "btn-success");
+            button.classList.remove(isOff ? "btn-success" : "btn-danger");
             button.innerText = isOff ? "Off" : "On";
         }
 
@@ -126,8 +128,7 @@ function addDefaultNodesWithConnections() {
 
     const add = (name, type, x, y, status = "on") => {
         const html = createNodeHTML(name, type, status);
-        const inputs = type === "inputnode" ? 0 : 1;
-        const outputs = type === "outputnode" ? 0 : 1;
+        const [inputs, outputs] = { inputnode: [0, 1], outputnode: [1, 0] }[type] ?? [1, 1];
         const data = { name, ...(type === "energynode" && { status }) };
         nodeIds[name] = editor.addNode(type, inputs, outputs, x, y, type, data, html);
     };
